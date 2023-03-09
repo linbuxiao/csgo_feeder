@@ -58,20 +58,24 @@ impl Fetcher {
         );
         let base_url = "https://api.wmpvp.com/api/v2/home/validUser?";
         let client = reqwest::blocking::Client::new();
-        let headers_map: HashMap<String, String>  = [
-            ("Host".to_string(), "api.wmpvp.com".to_string()),
-            ("Accept".to_string(), "application/json, text/plain, */*".to_string()),
-            ("X-Requested-With".to_string(), "XMLHttpRequest".to_string()),
-            ("Accept-Language".to_string(), "en-US,en;q=0.9".to_string()),
-            ("platform".to_string(), "h5_ios".to_string()),
-            ("Accept-Encoding".to_string(), "gzip, deflate, br".to_string()),
-            ("Origin".to_string(), "https://news.wmpvp.com".to_string()),
-            ("Content-Length".to_string(), "210".to_string()),
-            ("User-Agent".to_string(), "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148- EsportsApp Version=2.3.30".to_string()),
-            ("Referer".to_string(), "https://news.wmpvp.com".to_string()),
-            ("Connection".to_string(), "keep-alive".to_string()),
-            ("Content-Type".to_string(), "application/json;charset=utf-8".to_string()),
+        let headers_map_str: HashMap<&str, &str> = [
+            ("Host", "api.wmpvp.com"),
+            ("Accept", "application/json, text/plain, */*"),
+            ("X-Requested-With", "XMLHttpRequest"),
+            ("Accept-Language", "en-US,en;q=0.9"),
+            ("platform", "h5_ios"),
+            ("Accept-Encoding", "gzip, deflate, br"),
+            ("Origin", "https://news.wmpvp.com"),
+            ("Content-Length", "210"),
+            ("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148- EsportsApp Version=2.3.30"),
+            ("Referer", "https://news.wmpvp.com"),
+            ("Connection", "keep-alive"),
+            ("Content-Type", "application/json;charset=utf-8"),
         ].iter().cloned().collect();
+        let headers_map: HashMap<String, String> = headers_map_str
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect();
         let headers: HeaderMap = (&headers_map).try_into().expect("valid headers");
         let raw_resp_builder = client
             .post(format!("{}sign={}", base_url, self.get_sign()))
